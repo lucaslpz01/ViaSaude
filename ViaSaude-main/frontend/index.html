@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Via Saúde ajuda você a encontrar atendimento, fila, disponibilidade e locais de saúde da rede pública antes de enfrentar a espera."
+    />
+    <title>Via Saúde | Encontre o atendimento certo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" role="banner">
+      <div class="container header-inner">
+        <a class="brand" href="#inicio" aria-label="Página inicial do Via Saúde">
+          <img src="img/logo_viasaude.png" alt="Logo do Via Saúde" class="brand-logo" />
+          <span>Via Saúde</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegação principal">
+          <a href="#inicio" class="nav-link active">Início</a>
+          <a href="#servicos" class="nav-link">Atendimento</a>
+          <a href="#unidades" class="nav-link">Unidades</a>
+          <a href="#saluva" class="nav-link">Saluva</a>
+          <a href="#ajuda" class="nav-link">Ajuda</a>
+        </nav>
+
+        <a class="emergency-button" href="tel:192" aria-label="Ligar para o SAMU">192 • SAMU</a>
+      </div>
+    </header>
+
+    <main>
+      <section id="inicio" class="hero-section">
+        <div class="container hero-layout">
+          <div class="hero-carousel" aria-label="Destaques do Via Saúde" aria-live="polite">
+            <div class="carousel-track">
+              <article class="carousel-slide is-active" aria-hidden="false">
+                <img
+                  src="images/hero-1.webp"
+                  alt="Ilustração de atendimento em saúde"
+                  width="1600"
+                  height="900"
+                  fetchpriority="high"
+                />
+                <div class="slide-overlay">
+                  <span class="eyebrow">Atendimento público</span>
+                  <h1>Encontre o cuidado certo antes da fila crescer.</h1>
+                  <p>Veja onde há disponibilidade, fila estimada e unidade mais próxima de você.</p>
+                  <div class="hero-actions">
+                    <a href="#servicos" class="btn btn-primary">Encontrar atendimento agora</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="carousel-slide" aria-hidden="true">
+                <img
+                  src="images/hero-2.webp"
+                  alt="Ilustração de consulta médica"
+                  width="1600"
+                  height="900"
+                  loading="lazy"
+                />
+                <div class="slide-overlay">
+                  <span class="eyebrow">Agenda simples</span>
+                  <h2>Marque consulta com mais clareza.</h2>
+                  <p>Compare especialidades, horários e a unidade mais adequada ao seu caso.</p>
+                  <div class="hero-actions">
+                    <a href="#ajuda" class="btn btn-primary">Marcar consulta</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="carousel-slide" aria-hidden="true">
+                <img
+                  src="images/hero-3.webp"
+                  alt="Ilustração de exames e monitoramento"
+                  width="1600"
+                  height="900"
+                  loading="lazy"
+                />
+                <div class="slide-overlay">
+                  <span class="eyebrow">Acompanhamento</span>
+                  <h2>Agende exames com segurança.</h2>
+                  <p>Consulte disponibilidade, setor e distância antes de ir até a unidade.</p>
+                  <div class="hero-actions">
+                    <a href="#servicos" class="btn btn-primary">Marcar exame</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="carousel-slide" aria-hidden="true">
+                <img
+                  src="images/hero-4.webp"
+                  alt="Ilustração da assistente virtual Saluva"
+                  width="1600"
+                  height="900"
+                  loading="lazy"
+                />
+                <div class="slide-overlay">
+                  <span class="eyebrow">Saluva</span>
+                  <h2>Orientação clara em cada etapa.</h2>
+                  <p>A sua assistente virtual explica como usar o portal, filas e opções de atendimento.</p>
+                  <div class="hero-actions">
+                    <a href="#saluva" class="btn btn-primary">Conhecer a Saluva</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="carousel-controls" aria-label="Navegação do carrossel">
+              <button type="button" class="carousel-btn prev" aria-label="Slide anterior">‹</button>
+              <div class="carousel-dots" role="tablist" aria-label="Escolha de slide">
+                <button type="button" class="carousel-dot is-active" aria-label="Ir para o slide 1" aria-pressed="true"></button>
+                <button type="button" class="carousel-dot" aria-label="Ir para o slide 2" aria-pressed="false"></button>
+                <button type="button" class="carousel-dot" aria-label="Ir para o slide 3" aria-pressed="false"></button>
+                <button type="button" class="carousel-dot" aria-label="Ir para o slide 4" aria-pressed="false"></button>
+              </div>
+              <button type="button" class="carousel-btn next" aria-label="Próximo slide">›</button>
+            </div>
+          </div>
+
+          <aside class="card summary-panel" aria-label="Painel de indicadores de saúde">
+            <div class="summary-header">
+              <span>Resumo do dia</span>
+              <span class="summary-badge">+18%</span>
+            </div>
+
+            <div class="metrics">
+              <div class="metric">
+                <span>Consultas</span>
+                <strong data-value="92">92</strong>
+              </div>
+              <div class="metric">
+                <span>Exames</span>
+                <strong data-value="46">46</strong>
+              </div>
+              <div class="metric">
+                <span>Atendimentos</span>
+                <strong data-value="128">128</strong>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="servicos" class="section">
+        <div class="container">
+          <div class="section-heading">
+            <span class="eyebrow">Acesso rápido</span>
+            <h2>O que você precisa fazer hoje?</h2>
+          </div>
+
+          <div class="action-grid" aria-label="Ações essenciais do Via Saúde">
+            <article class="action-card">
+              <div class="action-icon" aria-hidden="true">📍</div>
+              <h3>Encontrar atendimento agora</h3>
+              <p>Veja unidades abertas e a fila mais próxima de você.</p>
+              <a href="#unidades">Ver locais</a>
+            </article>
+
+            <article class="action-card">
+              <div class="action-icon" aria-hidden="true">🩺</div>
+              <h3>Marcar consulta</h3>
+              <p>Confira médicos, horários e especialidades disponíveis.</p>
+              <a href="#ajuda">Agendar</a>
+            </article>
+
+            <article class="action-card">
+              <div class="action-icon" aria-hidden="true">🧪</div>
+              <h3>Marcar exame</h3>
+              <p>Escolha laboratório ou unidade com agenda compatível.</p>
+              <a href="#ajuda">Consultar agenda</a>
+            </article>
+
+            <article class="action-card">
+              <div class="action-icon" aria-hidden="true">🧭</div>
+              <h3>Como chegar</h3>
+              <p>Veja distância, rota e orientação de acesso à unidade.</p>
+              <a href="#unidades">Traçar rota</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-panel" aria-labelledby="busca-title">
+        <div class="container">
+          <div class="search-header">
+            <div>
+              <span class="eyebrow">Buscar por necessidade</span>
+              <h2 id="busca-title">Encontre o serviço ideal para você</h2>
+            </div>
+            <p>Selecione a especialidade ou tipo de atendimento que procura.</p>
+          </div>
+
+          <form class="service-filter" aria-label="Filtro por serviço">
+            <label>
+              <span class="sr-only">Especialidade</span>
+              <select id="serviceSelect" aria-label="Selecionar especialidade">
+                <option value="todos">Todos os serviços</option>
+                <option value="clinica-geral">Clínica geral</option>
+                <option value="pediatria">Pediatria</option>
+                <option value="cardiologia">Cardiologia</option>
+                <option value="ginecologia">Ginecologia</option>
+                <option value="ultrassom">Ultrassom</option>
+                <option value="vacina">Vacinação</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="sr-only">Região</span>
+              <select id="regionSelect" aria-label="Selecionar região">
+                <option value="todos">Todas as regiões</option>
+                <option value="plano-piloto">Plano Piloto</option>
+                <option value="taguatinga">Taguatinga</option>
+                <option value="ceilandia">Ceilândia</option>
+                <option value="guas-lindas">Guaianases</option>
+              </select>
+            </label>
+
+            <button type="button" class="btn btn-primary" id="searchButton">Buscar</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="unidades" class="section alt-section">
+        <div class="container">
+          <div class="section-heading">
+            <span class="eyebrow">Unidades do DF</span>
+            <h2>Escolha a unidade mais adequada</h2>
+          </div>
+
+          <div class="tabs" data-tabs aria-label="Abas por região"></div>
+          <div class="unit-list" data-unit-list aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="section institucional" id="ajuda">
+        <div class="container info-layout">
+          <div>
+            <span class="eyebrow">Como o Via Saúde ajuda</span>
+            <h2>Informação útil para você decidir com calma.</h2>
+            <p>
+              O site organiza dados de atenção à saúde pública para que a pessoa possa comparar
+              opções, verificar a fila e conhecer os serviços mais próximos. Ele não substitui a
+              avaliação clínica nem a classificação de risco da equipe de saúde.
+            </p>
+            <a href="#unidades" class="btn btn-primary">Confira as unidades</a>
+          </div>
+
+          <div class="mini-card card">
+            <h3>Antes de ir</h3>
+            <ul>
+              <li>Confirme disponibilidade do serviço</li>
+              <li>Veja a distância até a unidade</li>
+              <li>Consulte a fila estimada</li>
+              <li>Use o 192 em caso de emergência</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="saluva" class="section saluva-section">
+        <div class="container saluva-layout">
+          <div class="saluva-copy">
+            <span class="eyebrow">A Saluva</span>
+            <h2>Sua assistente virtual para orientar o uso do site.</h2>
+            <p>
+              A Saluva ajuda a entender como consultar unidades, comparar filas, agendar consultas
+              e acompanhar mudanças na disponibilidade do atendimento. Ela explica em linguagem simples
+              e orienta sem decidir prioridade clínica.
+            </p>
+            <ul class="check-list">
+              <li>Explica como usar cada função do portal</li>
+              <li>Mostra opções mais próximas e mais rápidas</li>
+              <li>Ajuda a refazer o processo se a agenda mudar</li>
+            </ul>
+          </div>
+
+          <div class="saluva-card card" aria-label="Assistente virtual Saluva">
+            <div class="chat-bubble">Olá! Posso te ajudar a encontrar a melhor unidade para o seu caso.</div>
+            <div class="chat-bubble alt">Quero ver fila e disponibilidade em minha região.</div>
+            <div class="chat-bubble">Claro. Posso mostrar opções por especialidade e região em poucos passos.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section noticias-section" aria-labelledby="noticias-title">
+        <div class="container">
+          <div class="section-heading">
+            <span class="eyebrow">Orientações</span>
+            <h2 id="noticias-title">Notícias e orientações de saúde</h2>
+          </div>
+
+          <div class="news-grid">
+            <article class="news-card card">
+              <span class="news-tag">Saúde</span>
+              <h3>Como escolher a melhor unidade para urgência e emergência</h3>
+              <p>Entenda quando a melhor opção é uma UPA, pronto atendimento ou atendimento agendado.</p>
+            </article>
+
+            <article class="news-card card">
+              <span class="news-tag">Atenção</span>
+              <h3>Fila e lotação podem mudar ao longo do dia</h3>
+              <p>Reveja a disponibilidade antes de sair de casa e confirme o serviço escolhido.</p>
+            </article>
+
+            <article class="news-card card">
+              <span class="news-tag">Cuidado</span>
+              <h3>O site organiza informações, não substitui o atendimento clínico</h3>
+              <p>Se houver risco de vida, ligue 192 e siga a orientação da equipe de saúde.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <h3>Via Saúde</h3>
+          <p>Organizando informações de saúde pública para facilitar a busca por cuidado.</p>
+        </div>
+
+        <div>
+          <h4>Menu</h4>
+          <ul>
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#servicos">Atendimento</a></li>
+            <li><a href="#unidades">Unidades</a></li>
+            <li><a href="#saluva">Saluva</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Ajuda</h4>
+          <ul>
+            <li><a href="#ajuda">Como usar</a></li>
+            <li><a href="tel:192">Ligar 192</a></li>
+            <li><a href="#">Perguntas frequentes</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Importante</h4>
+          <p>As informações deste site não substituem a avaliação clínica, o atendimento realizado por profissionais de saúde nem a classificação de risco.</p>
+        </div>
+      </div>
+    </footer>
+
+    <a class="emergency-floating" href="tel:192" aria-label="Emergência: ligar para o SAMU">192 • SAMU</a>
+
+    <script src="script.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
