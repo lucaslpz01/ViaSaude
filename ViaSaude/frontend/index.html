@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Via Saúde | Encontre o atendimento certo</title>
+  <meta name="description" content="Compare fila, lotação e distância de UPAs e hospitais públicos, marque consulta ou exame e tire dúvidas com a Saluva, a assistente do Via Saúde." />
+  <meta name="theme-color" content="#0b5d8c" />
+  <link rel="icon" type="image/png" href="img/logo_viasaude.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+  <div class="demo-banner" id="demoBanner" hidden>
+    Versão de demonstração: unidades, filas e agendas são fictícias e nenhuma consulta é realmente marcada.
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="Via Saúde, página inicial">
+        <img src="img/logo_viasaude.png" alt="" width="44" height="44" />
+        <span>Via Saúde</span>
+      </a>
+
+      <button class="nav-toggle" type="button" id="navToggle" aria-expanded="false" aria-controls="mainNav">
+        <span class="sr-only">Abrir menu</span>
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </button>
+
+      <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
+        <a href="#inicio" class="nav-link">Início</a>
+        <a href="#unidades" class="nav-link">Unidades</a>
+        <a href="#agendar" class="nav-link">Agendar</a>
+        <a href="#saluva" class="nav-link">Saluva</a>
+        <a href="#como-funciona" class="nav-link">Como funciona</a>
+        <a href="#ajuda" class="nav-link">Ajuda</a>
+      </nav>
+
+      <a class="btn btn-emergency" href="tel:192" aria-label="Emergência: ligar para o SAMU, 192">Ligar 192</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- DESTAQUES (carrossel automático) -->
+    <section class="hero" id="inicio" aria-roledescription="carrossel" aria-label="Destaques do Via Saúde" data-carousel>
+      <div class="slides">
+
+        <article class="slide slide--1 is-active" aria-roledescription="slide" aria-label="1 de 4">
+          <div class="container">
+            <div class="slide-copy">
+              <h1>Encontre o atendimento certo antes de enfrentar a fila.</h1>
+              <p>Compare fila, lotação e distância das UPAs, UBSs e hospitais públicos da sua região.</p>
+              <div class="slide-actions">
+                <a href="#unidades" class="btn btn-light">Buscar atendimento</a>
+                <a href="#agendar" class="btn btn-outline-light">Agendar consulta</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide slide--2" aria-roledescription="slide" aria-label="2 de 4" aria-hidden="true">
+          <div class="container">
+            <div class="slide-copy">
+              <h2>Marque consulta ou exame pelo site.</h2>
+              <p>Escolha a unidade, o profissional e o horário. Se algo mudar depois, avisamos para você refazer a marcação.</p>
+              <div class="slide-actions">
+                <a href="#agendar" class="btn btn-light">Agendar agora</a>
+                <a href="#agendar" class="btn btn-outline-light">Ver meus agendamentos</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide slide--3" aria-roledescription="slide" aria-label="3 de 4" aria-hidden="true">
+          <div class="container">
+            <div class="slide-copy">
+              <h2>Converse com a Saluva.</h2>
+              <p>Ela explica como usar o site, ajuda a achar a unidade certa e responde dúvidas sobre o agendamento.</p>
+              <div class="slide-actions">
+                <button type="button" class="btn btn-light" data-saluva-open>Conversar agora</button>
+                <a href="#saluva" class="btn btn-outline-light">Conhecer a Saluva</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide slide--4" aria-roledescription="slide" aria-label="4 de 4" aria-hidden="true">
+          <div class="container">
+            <div class="slide-copy">
+              <h2>Emergência? Não espere.</h2>
+              <p>Se há risco à vida, ligue 192 (SAMU). O Via Saúde organiza informações e não substitui a avaliação da equipe de saúde.</p>
+              <div class="slide-actions">
+                <a href="tel:192" class="btn btn-light">Ligar 192</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="container hero-controls">
+        <div class="hero-dots" role="group" aria-label="Escolher destaque"></div>
+        <div class="hero-buttons">
+          <button type="button" class="ctrl" data-carousel-prev aria-label="Destaque anterior">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="ctrl" data-carousel-pause aria-label="Pausar rotação automática">Pausar</button>
+          <button type="button" class="ctrl" data-carousel-next aria-label="Próximo destaque">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACESSO RÁPIDO -->
+    <section class="quick" aria-label="Acesso rápido">
+      <div class="container quick-grid">
+        <a class="quick-card" href="#unidades">
+          <span class="quick-icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg></span>
+          <span class="quick-text"><strong>Ver filas agora</strong><span>Compare unidades perto de você</span></span>
+        </a>
+        <a class="quick-card" href="#agendar" data-action="prefill-booking" data-service="consulta-geral">
+          <span class="quick-icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span>
+          <span class="quick-text"><strong>Agendar consulta</strong><span>Escolha unidade, médico e horário</span></span>
+        </a>
+        <a class="quick-card" href="#agendar" data-action="prefill-booking" data-service="ultrassom">
+          <span class="quick-icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/></svg></span>
+          <span class="quick-text"><strong>Agendar exame</strong><span>Veja onde há vaga e marque</span></span>
+        </a>
+        <button class="quick-card" type="button" data-saluva-open>
+          <span class="quick-icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg></span>
+          <span class="quick-text"><strong>Falar com a Saluva</strong><span>Tire dúvidas sobre o site</span></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- UNIDADES -->
+    <section class="section" id="unidades">
+      <div class="container">
+        <div class="section-head">
+          <h2>Unidades de saúde pública</h2>
+          <p>Escolha a região e use os filtros para comparar fila, lotação e distância.</p>
+        </div>
+
+        <div class="tabs" id="regionTabs" role="group" aria-label="Filtrar por região"></div>
+
+        <div class="filter-bar">
+          <label>
+            <span>Serviço</span>
+            <select id="serviceFilter"></select>
+          </label>
+          <label>
+            <span>Lotação</span>
+            <select id="lotacaoFilter">
+              <option value="todos">Qualquer lotação</option>
+              <option value="verde">Baixa</option>
+              <option value="amarelo">Média</option>
+              <option value="vermelho">Alta</option>
+            </select>
+          </label>
+          <label>
+            <span>Distância</span>
+            <select id="distanceFilter">
+              <option value="todos">Qualquer distância</option>
+              <option value="ate-2km">Até 2 km</option>
+              <option value="ate-5km">Até 5 km</option>
+              <option value="mais-5km">Mais de 5 km</option>
+            </select>
+          </label>
+          <label>
+            <span>Ordenar por</span>
+            <select id="sortFilter">
+              <option value="fila">Menor fila</option>
+              <option value="distancia">Mais perto</option>
+              <option value="nome">Nome</option>
+            </select>
+          </label>
+          <button type="button" class="btn btn-secondary" id="clearFilters">Limpar filtros</button>
+        </div>
+
+        <p class="unit-summary" id="unitSummary" aria-live="polite"></p>
+        <div id="unitResults" class="unit-grid"></div>
+        <p class="fineprint">A cor indica a lotação informada pela unidade. Ela não é uma classificação de risco: quem define a prioridade de atendimento é a equipe de saúde.</p>
+      </div>
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section class="section section-white" id="como-funciona">
+      <div class="container about">
+        <img class="about-saluva" src="img/saluva.png" alt="Saluva, assistente virtual do Via Saúde" width="640" height="640" loading="lazy" />
+        <div>
+          <h2>Informação clara antes de sair de casa</h2>
+          <p>O Via Saúde reúne em um só lugar o que a pessoa precisa saber para ser atendida na rede pública: onde há atendimento, como está a fila e como marcar.</p>
+          <ol class="steps">
+            <li><strong>Compare as unidades.</strong> Veja fila estimada, lotação, distância e serviços de cada UPA, UBS e hospital.</li>
+            <li><strong>Marque ou vá direto.</strong> Agende consulta ou exame, presencial ou online, ou abra a rota no mapa.</li>
+            <li><strong>Leve o essencial.</strong> Documento com foto, Cartão SUS, receitas e exames anteriores.</li>
+          </ol>
+          <a href="#unidades" class="btn btn-primary">Ver unidades</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGENDAMENTO -->
+    <section class="section" id="agendar">
+      <div class="container appointment-layout">
+        <div class="panel">
+          <h2>Marque consulta ou exame</h2>
+          <p class="panel-lead" id="formTitle">Preencha os dados abaixo. Os horários ocupados aparecem desativados.</p>
+
+          <form id="appointmentForm" novalidate>
+            <div class="form-grid">
+              <label>
+                <span>Hospital ou UPA</span>
+                <select id="appointmentUnit" name="unitId" required></select>
+              </label>
+              <label>
+                <span>Serviço</span>
+                <select id="appointmentService" name="service" required></select>
+              </label>
+              <label>
+                <span>Profissional</span>
+                <select id="appointmentDoctor" name="doctor" required></select>
+              </label>
+              <label>
+                <span>Modalidade</span>
+                <select id="appointmentMode" name="mode" required>
+                  <option value="">Selecione</option>
+                  <option value="presencial">Presencial</option>
+                  <option value="online">Online</option>
+                </select>
+              </label>
+              <label>
+                <span>Data</span>
+                <input type="date" id="appointmentDate" name="date" required />
+              </label>
+              <label>
+                <span>Horário</span>
+                <select id="appointmentTime" name="time" required></select>
+              </label>
+              <label class="span-2">
+                <span>Nome completo</span>
+                <input type="text" id="patientName" name="name" autocomplete="name" placeholder="Nome e sobrenome" required />
+              </label>
+              <label>
+                <span>CPF ou Cartão SUS</span>
+                <input type="text" id="patientDocument" name="document" inputmode="numeric" autocomplete="off" placeholder="Somente números" required />
+              </label>
+              <label>
+                <span>Telefone</span>
+                <input type="tel" id="patientPhone" name="phone" autocomplete="tel" placeholder="(61) 99999-9999" required />
+              </label>
+              <label class="span-2">
+                <span>E-mail</span>
+                <input type="email" id="patientEmail" name="email" autocomplete="email" placeholder="nome@email.com" required />
+              </label>
+            </div>
+
+            <div class="consent">
+              <input type="checkbox" id="privacyConsent" name="privacyConsent" required />
+              <label for="privacyConsent">Concordo com o uso dos meus dados apenas para este agendamento, conforme a LGPD (Lei 13.709/2018). Os dados ficam salvos somente neste navegador e podem ser apagados ao cancelar o agendamento.</label>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="submitBtn">Confirmar agendamento</button>
+              <button type="button" class="btn btn-secondary" id="cancelEdit" hidden>Cancelar alteração</button>
+            </div>
+          </form>
+
+          <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+        </div>
+
+        <aside class="panel">
+          <h2>Meus agendamentos</h2>
+          <div id="appointmentsList" class="appointments" aria-live="polite"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- SALUVA -->
+    <section class="section saluva" id="saluva">
+      <div class="container saluva-layout">
+        <div class="saluva-copy">
+          <img class="saluva-portrait" src="img/saluva.png" alt="Saluva, assistente virtual do Via Saúde" width="160" height="160" loading="lazy" />
+          <h2>Saluva, a assistente do Via Saúde</h2>
+          <p>Pergunte como usar o site, qual unidade tem menos fila ou como marcar uma consulta. A Saluva não faz diagnóstico, não indica medicamentos e não define prioridade de atendimento.</p>
+          <p class="saluva-try">Experimente perguntar:</p>
+          <div class="chips">
+            <button type="button" class="chip" data-saluva-prompt="Qual unidade está com a menor fila agora?">Qual unidade tem a menor fila?</button>
+            <button type="button" class="chip" data-saluva-prompt="Como faço para marcar uma consulta?">Como marcar uma consulta?</button>
+            <button type="button" class="chip" data-saluva-prompt="Onde posso levar meu filho ao pediatra?">Onde achar pediatria?</button>
+            <button type="button" class="chip" data-saluva-prompt="Quais documentos devo levar?">Quais documentos levar?</button>
+          </div>
+        </div>
+
+        <div class="chat chat-inline" data-saluva aria-label="Conversa com a Saluva">
+          <div class="chat-head">
+            <img class="chat-avatar" src="img/saluva.png" alt="" width="36" height="36" />
+            <span class="dot-online" aria-hidden="true"></span>
+            <strong>Saluva</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AJUDA -->
+    <section class="section section-white" id="ajuda">
+      <div class="container help-layout">
+        <div>
+          <h2>Perguntas frequentes</h2>
+          <p>Respostas rápidas para as dúvidas mais comuns.</p>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Quando procurar uma UPA e quando procurar uma UBS?</summary>
+            <p>As UPAs funcionam 24 horas e atendem urgências, como febre alta, dores fortes e ferimentos. As UBSs cuidam do acompanhamento de rotina, de vacinas e de consultas agendadas. Se há risco à vida, ligue 192 (SAMU).</p>
+          </details>
+          <details>
+            <summary>O que significam as cores de lotação?</summary>
+            <p>Verde indica lotação baixa, amarelo média e vermelho alta. É só uma informação para você se organizar. A prioridade de atendimento é definida pela equipe de saúde na classificação de risco.</p>
+          </details>
+          <details>
+            <summary>Quais documentos devo levar?</summary>
+            <p>Documento oficial com foto e Cartão SUS. Se tiver, leve também receitas, exames anteriores e a carteira de vacinação.</p>
+          </details>
+          <details>
+            <summary>Como remarco ou cancelo um agendamento?</summary>
+            <p>Na seção Meus agendamentos, use os botões Remarcar ou Cancelar do agendamento desejado.</p>
+          </details>
+          <details>
+            <summary>E se a unidade ou o médico ficar indisponível?</summary>
+            <p>O agendamento aparece com um aviso em Meus agendamentos e você é notificado na tela. Basta tocar em Remarcar e escolher outra opção.</p>
+          </details>
+          <details>
+            <summary>Meus dados estão seguros?</summary>
+            <p>Os dados do agendamento ficam salvos apenas no seu navegador. O documento aparece mascarado na lista e tudo é apagado quando você cancela o agendamento ou limpa os dados do site.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><img src="img/logo_viasaude.png" alt="" width="36" height="36" /> Via Saúde</p>
+        <p>Encontre o atendimento certo antes de enfrentar a fila.</p>
+      </div>
+      <div>
+        <h3>Navegação</h3>
+        <ul>
+          <li><a href="#unidades">Unidades</a></li>
+          <li><a href="#agendar">Agendar</a></li>
+          <li><a href="#saluva">Saluva</a></li>
+          <li><a href="#ajuda">Ajuda</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Telefones úteis</h3>
+        <ul>
+          <li><a href="tel:192">192 · SAMU</a></li>
+          <li><a href="tel:188">188 · CVV (apoio emocional)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Importante</h3>
+        <p>As informações deste site não substituem orientação médica, a classificação de risco nem o atendimento dos profissionais de saúde.</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> Via Saúde. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Saluva flutuante -->
+  <button class="saluva-fab" id="openSaluva" type="button" aria-expanded="false" aria-controls="chatWidget">
+    <img class="saluva-fab-avatar" src="img/saluva.png" alt="" width="36" height="36" />
+    <span id="fabLabel">Saluva</span>
+  </button>
+
+  <aside class="chat chat-widget" id="chatWidget" data-saluva aria-label="Chat da Saluva" hidden>
+    <div class="chat-head">
+      <img class="chat-avatar" src="img/saluva.png" alt="" width="36" height="36" />
+      <span class="dot-online" aria-hidden="true"></span>
+      <strong>Saluva</strong>
+      <button type="button" class="chat-close" id="closeChat" aria-label="Fechar chat">×</button>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/saluva.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
