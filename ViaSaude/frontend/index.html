@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Via Saúde | Encontre o atendimento certo</title>
-  <meta name="description" content="Compare fila, lotação e distância de UPAs e hospitais públicos, marque consulta ou exame e tire dúvidas com a Saluva, a assistente do Via Saúde." />
+  <meta name="description" content="Encontre hospitais, UPAs, UBSs, clínicas e outros estabelecimentos de saúde mapeados perto de você. Calcule a distância a partir da sua localização." />
   <meta name="theme-color" content="#0b5d8c" />
   <link rel="icon" type="image/png" href="img/logo_viasaude.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,8 +15,8 @@
 <body>
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 
-  <div class="demo-banner" id="demoBanner" hidden>
-    Versão de demonstração: unidades, filas e agendas são fictícias e nenhuma consulta é realmente marcada.
+  <div class="demo-banner" id="demoB  anner" hidden>
+    A lista de locais usa dados cartográficos do OpenStreetMap e pode estar incompleta. O formulário de agendamento é uma demonstração: unidades, profissionais, horários e filas não representam disponibilidade real.
   </div>
 
   <header class="site-header">
@@ -53,8 +53,8 @@
         <article class="slide slide--1 is-active" aria-roledescription="slide" aria-label="1 de 4">
           <div class="container">
             <div class="slide-copy">
-              <h1>Encontre o atendimento certo antes de enfrentar a fila.</h1>
-              <p>Compare fila, lotação e distância das UPAs, UBSs e hospitais públicos da sua região.</p>
+              <h1>Encontre unidades de saúde perto de você.</h1>
+              <p>Encontre hospitais, UPAs, UBSs, clínicas e outros estabelecimentos mapeados na sua região.</p>
               <div class="slide-actions">
                 <a href="#unidades" class="btn btn-light">Buscar atendimento</a>
                 <a href="#agendar" class="btn btn-outline-light">Agendar consulta</a>
@@ -121,7 +121,7 @@
       <div class="container quick-grid">
         <a class="quick-card" href="#unidades">
           <span class="quick-icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg></span>
-          <span class="quick-text"><strong>Ver filas agora</strong><span>Compare unidades perto de você</span></span>
+          <span class="quick-text"><strong>Unidades próximas</strong><span>Consulte locais mapeados na região</span></span>
         </a>
         <a class="quick-card" href="#agendar" data-action="prefill-booking" data-service="consulta-geral">
           <span class="quick-icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span>
@@ -142,24 +142,27 @@
     <section class="section" id="unidades">
       <div class="container">
         <div class="section-head">
-          <h2>Unidades de saúde pública</h2>
-          <p>Escolha a região e use os filtros para comparar fila, lotação e distância.</p>
+          <h2>Unidades de saúde próximas</h2>
+          <p>Consulte estabelecimentos públicos e particulares mapeados em até 25 km. A distância é calculada do seu dispositivo até o ponto no mapa.</p>
         </div>
-
-        <div class="tabs" id="regionTabs" role="group" aria-label="Filtrar por região"></div>
 
         <div class="filter-bar">
           <label>
-            <span>Serviço</span>
-            <select id="serviceFilter"></select>
-          </label>
-          <label>
-            <span>Lotação</span>
-            <select id="lotacaoFilter">
-              <option value="todos">Qualquer lotação</option>
-              <option value="verde">Baixa</option>
-              <option value="amarelo">Média</option>
-              <option value="vermelho">Alta</option>
+            <span>Tipo de unidade</span>
+            <select id="typeFilter">
+              <option value="todos">Todos os tipos</option>
+              <option value="Hospital">Hospitais</option>
+              <option value="Hospital Regional">Hospitais regionais</option>
+              <option value="UPA">UPAs</option>
+              <option value="UBS">UBSs e postos de saúde</option>
+              <option value="Clínica">Clínicas e centros médicos</option>
+              <option value="Consultório">Consultórios e ambulatórios</option>
+              <option value="Dentista">Dentistas</option>
+              <option value="Farmácia">Farmácias</option>
+              <option value="Laboratório">Laboratórios</option>
+              <option value="Diagnóstico">Diagnóstico por imagem</option>
+              <option value="Reabilitação">Reabilitação</option>
+              <option value="Unidade de saúde">Outras unidades</option>
             </select>
           </label>
           <label>
@@ -174,17 +177,18 @@
           <label>
             <span>Ordenar por</span>
             <select id="sortFilter">
-              <option value="fila">Menor fila</option>
               <option value="distancia">Mais perto</option>
               <option value="nome">Nome</option>
             </select>
           </label>
+          <button type="button" class="btn btn-secondary" id="getLocation" aria-label="Usar minha localização">Usar minha localização</button>
           <button type="button" class="btn btn-secondary" id="clearFilters">Limpar filtros</button>
         </div>
 
+        <p class="fineprint" id="locationStatus" aria-live="polite">Selecione “Usar minha localização” para buscar unidades próximas. A busca envia ao Photon apenas uma área aproximada; sua posição exata não é armazenada pelo Via Saúde.</p>
         <p class="unit-summary" id="unitSummary" aria-live="polite"></p>
         <div id="unitResults" class="unit-grid"></div>
-        <p class="fineprint">A cor indica a lotação informada pela unidade. Ela não é uma classificação de risco: quem define a prioridade de atendimento é a equipe de saúde.</p>
+        <p class="fineprint">Dados cartográficos © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">contribuidores do OpenStreetMap</a>, via Photon. A fonte não classifica de forma confiável a rede pública ou particular. O catálogo pode estar incompleto ou desatualizado; confirme endereço e funcionamento com a unidade antes de se deslocar.</p>
       </div>
     </section>
 
@@ -194,10 +198,10 @@
         <img class="about-saluva" src="img/saluva.png" alt="Saluva, assistente virtual do Via Saúde" width="640" height="640" loading="lazy" />
         <div>
           <h2>Informação clara antes de sair de casa</h2>
-          <p>O Via Saúde reúne em um só lugar o que a pessoa precisa saber para ser atendida na rede pública: onde há atendimento, como está a fila e como marcar.</p>
+          <p>O Via Saúde ajuda a localizar estabelecimentos de saúde mapeados. Confirme diretamente com cada unidade os serviços oferecidos e o funcionamento.</p>
           <ol class="steps">
-            <li><strong>Compare as unidades.</strong> Veja fila estimada, lotação, distância e serviços de cada UPA, UBS e hospital.</li>
-            <li><strong>Marque ou vá direto.</strong> Agende consulta ou exame, presencial ou online, ou abra a rota no mapa.</li>
+            <li><strong>Encontre um local.</strong> Autorize sua localização e confira as unidades mapeadas próximas.</li>
+            <li><strong>Confirme antes de ir.</strong> Consulte a unidade sobre endereço, atendimento e disponibilidade.</li>
             <li><strong>Leve o essencial.</strong> Documento com foto, Cartão SUS, receitas e exames anteriores.</li>
           </ol>
           <a href="#unidades" class="btn btn-primary">Ver unidades</a>
@@ -210,7 +214,7 @@
       <div class="container appointment-layout">
         <div class="panel">
           <h2>Marque consulta ou exame</h2>
-          <p class="panel-lead" id="formTitle">Preencha os dados abaixo. Os horários ocupados aparecem desativados.</p>
+          <p class="panel-lead" id="formTitle">Demonstração local: o formulário não envia agendamentos para unidades de saúde.</p>
 
           <form id="appointmentForm" novalidate>
             <div class="form-grid">
@@ -287,10 +291,10 @@
         <div class="saluva-copy">
           <img class="saluva-portrait" src="img/saluva.png" alt="Saluva, assistente virtual do Via Saúde" width="160" height="160" loading="lazy" />
           <h2>Saluva, a assistente do Via Saúde</h2>
-          <p>Pergunte como usar o site, qual unidade tem menos fila ou como marcar uma consulta. A Saluva não faz diagnóstico, não indica medicamentos e não define prioridade de atendimento.</p>
+          <p>Pergunte como encontrar unidades mapeadas e usar o site. A Saluva não faz diagnóstico, não indica medicamentos nem tem dados reais de filas ou vagas.</p>
           <p class="saluva-try">Experimente perguntar:</p>
           <div class="chips">
-            <button type="button" class="chip" data-saluva-prompt="Qual unidade está com a menor fila agora?">Qual unidade tem a menor fila?</button>
+            <button type="button" class="chip" data-saluva-prompt="Como encontro uma unidade perto de mim?">Como encontro uma unidade perto de mim?</button>
             <button type="button" class="chip" data-saluva-prompt="Como faço para marcar uma consulta?">Como marcar uma consulta?</button>
             <button type="button" class="chip" data-saluva-prompt="Onde posso levar meu filho ao pediatra?">Onde achar pediatria?</button>
             <button type="button" class="chip" data-saluva-prompt="Quais documentos devo levar?">Quais documentos levar?</button>
@@ -320,8 +324,8 @@
             <p>As UPAs funcionam 24 horas e atendem urgências, como febre alta, dores fortes e ferimentos. As UBSs cuidam do acompanhamento de rotina, de vacinas e de consultas agendadas. Se há risco à vida, ligue 192 (SAMU).</p>
           </details>
           <details>
-            <summary>O que significam as cores de lotação?</summary>
-            <p>Verde indica lotação baixa, amarelo média e vermelho alta. É só uma informação para você se organizar. A prioridade de atendimento é definida pela equipe de saúde na classificação de risco.</p>
+            <summary>As filas e vagas mostradas são reais?</summary>
+            <p>Não. O site não recebe dados reais de filas, lotação, serviços ou vagas. O formulário de agendamento é apenas uma demonstração e não envia marcações para unidades.</p>
           </details>
           <details>
             <summary>Quais documentos devo levar?</summary>
@@ -348,7 +352,7 @@
     <div class="container footer-grid">
       <div>
         <p class="footer-brand"><img src="img/logo_viasaude.png" alt="" width="36" height="36" /> Via Saúde</p>
-        <p>Encontre o atendimento certo antes de enfrentar a fila.</p>
+        <p>Encontre unidades de saúde mapeadas perto de você.</p>
       </div>
       <div>
         <h3>Navegação</h3>

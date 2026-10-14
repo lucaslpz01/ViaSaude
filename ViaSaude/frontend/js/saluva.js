@@ -7,7 +7,7 @@
   const MAX_SAVED = 40;
   const WELCOME = {
     role: 'ai',
-    text: 'Olá! Eu sou a Saluva, assistente do Via Saúde. Posso ajudar a achar uma unidade, comparar filas e explicar como marcar consulta ou exame.\n\nNão faço diagnóstico nem indico tratamento. Em emergência, ligue 192.'
+    text: 'Olá! Eu sou a Saluva, assistente do Via Saúde. Posso ajudar a localizar unidades mapeadas e explicar como usar o site.\n\nNão faço diagnóstico nem indico tratamento. Em emergência, ligue 192.'
   };
 
   const views = [];
@@ -33,11 +33,6 @@
 
   /* ---------- textos auxiliares ---------- */
   const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const units = () => window.viaSaudeUnits || [];
-  const services = () => window.viaSaudeServices || {};
-  const demoNote = () => (CFG.demoMode ? '\n\n(Aviso: as filas e unidades deste site são dados de demonstração.)' : '');
-  const statusText = { verde: 'lotação baixa', amarelo: 'lotação média', vermelho: 'lotação alta' };
-  const line = (u) => `• ${u.name} (${u.region}): fila de cerca de ${u.queueMinutes} min, ${statusText[u.status]}, a ${u.distance.toFixed(1)} km`;
 
   const SERVICE_ALIASES = {
     pediatria: ['pediatr', 'crianca', 'bebe', 'filho', 'filha'],
@@ -69,32 +64,23 @@
   /* ---------- respostas locais ---------- */
   function localReply(message) {
     const t = norm(message);
-    if (!t.trim()) return 'Pode me dizer o que você precisa? Posso orientar sobre fila, unidades ou agendamento.';
+    if (!t.trim()) return 'Pode me dizer o que você precisa? Posso orientar sobre unidades mapeadas ou sobre como usar o site.';
 
     const urgent = urgentReply(t);
     if (urgent) return urgent;
     const medical = medicalReply(t);
     if (medical) return medical;
 
-    const list = units();
-
-    if (/menor fila|mais rapido|menos fila|fila menor|menos cheia|menos lotad/.test(t)) {
-      const top = [...list].sort((a, b) => a.queueMinutes - b.queueMinutes).slice(0, 3);
-      return `As unidades com menor fila agora são:\n${top.map(line).join('\n')}${demoNote()}`;
+    if (/menor fila|mais rapido|menos fila|fila menor|menos cheia|menos lotad|lotacao|cheio|cores?|verde|amarelo|vermelho/.test(t)) {
+      return 'O Via Saúde não recebe dados reais de fila ou lotação. Consulte a unidade diretamente; em cada estabelecimento, o atendimento define a prioridade clínica.';
     }
 
-    if (/mais perto|mais proxim|perto de mim|proxima/.test(t)) {
-      const top = [...list].sort((a, b) => a.distance - b.distance).slice(0, 3);
-      return `As unidades mais próximas são:\n${top.map(line).join('\n')}${demoNote()}`;
+    if (/mais perto|mais proxim|perto de mim|proxima|como chegar|rota|endereco|mapa|localizar|onde fica/.test(t)) {
+      return 'Na seção Unidades, selecione “Usar minha localização” e autorize o navegador. O mapa mostra os estabelecimentos de saúde mapeados próximos e calcula a distância em linha reta até cada ponto.';
     }
 
-    for (const [key, words] of Object.entries(SERVICE_ALIASES)) {
-      if (words.some((w) => t.includes(w))) {
-        const found = list.filter((u) => u.services.includes(key)).sort((a, b) => a.queueMinutes - b.queueMinutes).slice(0, 3);
-        if (found.length) {
-          return `${services()[key] || key} está disponível em:\n${found.map(line).join('\n')}\n\nPara marcar, vá até a seção Agendar e escolha o serviço.${demoNote()}`;
-        }
-      }
+    if (Object.values(SERVICE_ALIASES).some((words) => words.some((word) => t.includes(word)))) {
+      return 'A lista mostra estabelecimentos de saúde mapeados, mas não confirma os serviços oferecidos. Verifique diretamente com o estabelecimento antes de ir.';
     }
 
     if (/remarcar|cancelar|mudar (a )?(data|horario)/.test(t)) {
@@ -109,30 +95,19 @@
       return 'Leve um documento oficial com foto e o Cartão SUS. Se tiver, leve também receitas, exames anteriores e a carteira de vacinação.';
     }
 
-    if (/fila|espera|lotacao|cheio|cores?|verde|amarelo|vermelho/.test(t)) {
-      return 'A cor mostra a lotação informada pela unidade: verde é baixa, amarelo é média e vermelho é alta. Ela não é classificação de risco: a prioridade de atendimento é definida pela equipe de saúde.';
-    }
-
-    if (/como chegar|rota|endereco|mapa|localizar|onde fica/.test(t)) {
-      return 'Em cada unidade, toque em Como chegar para abrir a rota no Google Maps.';
-    }
-
     if (/cpf|dados|privacidade|lgpd|seguranca/.test(t)) {
       return 'Os dados do agendamento ficam salvos apenas no seu navegador. O documento aparece mascarado na lista e tudo é apagado quando você cancela o agendamento ou limpa os dados do site.';
     }
 
     if (/^(oi|ola|bom dia|boa tarde|boa noite|ajuda|quem e voce|o que voce faz)/.test(t) || /saluva|como funciona/.test(t)) {
-      return 'Eu ajudo a usar o Via Saúde: achar unidades, comparar filas, marcar consulta ou exame e entender as informações do site. O que você precisa?';
+      return 'Eu ajudo a usar o Via Saúde e encontrar estabelecimentos de saúde mapeados. O que você precisa?';
     }
 
-    return 'Posso ajudar a achar uma unidade, comparar filas, mostrar onde há um serviço (como pediatria ou vacina) e explicar como agendar. Se for urgente, ligue 192.';
+    return 'Posso ajudar a localizar estabelecimentos mapeados e explicar como usar o site. Não tenho dados em tempo real de filas, serviços ou vagas. Se for urgente, ligue 192.';
   }
 
   function buildContext() {
-    return units()
-      .map((u) => `${u.name} (${u.type}, ${u.region}): ${u.services.map((s) => services()[s] || s).join(', ')}; fila ~${u.queueMinutes} min; ${statusText[u.status]}; ${u.distance} km`)
-      .join('\n')
-      .slice(0, 3800);
+    return 'As unidades próximas são carregadas sob demanda de dados cartográficos do OpenStreetMap após autorização de localização. Não invente estabelecimentos, endereços, serviços, filas, lotação ou vagas. O cadastro pode estar incompleto; oriente confirmar diretamente com a unidade.';
   }
 
   /* ---------- API pública: askSaluva ---------- */

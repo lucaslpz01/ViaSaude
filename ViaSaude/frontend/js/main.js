@@ -7,6 +7,9 @@
 
   const CFG = window.viaSaudeConfig || {};
   const UNITS = window.viaSaudeUnits || [];
+  let HEALTH_UNITS = [];
+  let userPosition = null;
+  let unitsLoading = false;
   const SERVICES = window.viaSaudeServices || {};
   const STORAGE_KEY = 'viaSaudeAppointments.v2';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -16,7 +19,7 @@
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const serviceName = (k) => SERVICES[k] || k;
   const unitById = (id) => UNITS.find((u) => u.id === id);
-  const LOTACAO = { verde: 'Lotação baixa', amarelo: 'Lotação média', vermelho: 'Lotação alta' };
+  const PHOTON_ENDPOINT = 'https://photon.komoot.io/api/';
 
   const todayISO = () => {
     const d = new Date();
@@ -135,60 +138,155 @@
   /* ==========================================================
      Unidades
      ========================================================== */
-  const filters = { region: 'todas', service: 'todos', lotacao: 'todos', distance: 'todos', sort: 'fila' };
+  const filters = { type: 'todos', distance: 'todos', sort: 'distancia' };
 
   function initUnits() {
-    const regions = [...new Set(UNITS.map((u) => u.region))];
-    $('#regionTabs').innerHTML = ['todas', ...regions]
-      .map((r) => `<button type="button" class="tab" data-region="${esc(r)}" aria-pressed="${r === 'todas'}">${r === 'todas' ? 'Todas as regiões' : esc(r)}</button>`)
-      .join('');
-
-    $('#serviceFilter').innerHTML =
-      '<option value="todos">Todos os serviços</option>' +
-      Object.entries(SERVICES).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join('');
-
-    $('#regionTabs').addEventListener('click', (e) => {
-      const b = e.target.closest('.tab');
-      if (!b) return;
-      filters.region = b.dataset.region;
-      $$('.tab').forEach((t) => t.setAttribute('aria-pressed', String(t === b)));
-      renderUnits();
-    });
-
-    [['serviceFilter', 'service'], ['lotacaoFilter', 'lotacao'], ['distanceFilter', 'distance'], ['sortFilter', 'sort']].forEach(([id, key]) => {
+    $('#distanceFilter').disabled = true;
+    [['typeFilter', 'type'], ['distanceFilter', 'distance'], ['sortFilter', 'sort']].forEach(([id, key]) => {
       $(`#${id}`).addEventListener('change', (e) => { filters[key] = e.target.value; renderUnits(); });
     });
     $('#clearFilters').addEventListener('click', clearFilters);
+    $('#getLocation').addEventListener('click', requestUserLocation);
     renderUnits();
   }
 
   function clearFilters() {
-    Object.assign(filters, { region: 'todas', service: 'todos', lotacao: 'todos', distance: 'todos', sort: 'fila' });
-    $('#serviceFilter').value = 'todos';
-    $('#lotacaoFilter').value = 'todos';
+    Object.assign(filters, { type: 'todos', distance: 'todos', sort: 'distancia' });
+    $('#typeFilter').value = 'todos';
     $('#distanceFilter').value = 'todos';
-    $('#sortFilter').value = 'fila';
-    $$('.tab').forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.region === 'todas')));
+    $('#sortFilter').value = 'distancia';
     renderUnits();
   }
 
+  function distanceBetween(lat1, lon1, lat2, lon2) {
+    const radians = (degrees) => degrees * Math.PI / 180;
+    const deltaLat = radians(lat2 - lat1);
+    const deltaLon = radians(lon2 - lon1);
+    const arc = Math.sin(deltaLat / 2) ** 2 + Math.cos(radians(lat1)) * Math.cos(radians(lat2)) * Math.sin(deltaLon / 2) ** 2;
+    return 6371 * 2 * Math.atan2(Math.sqrt(arc), Math.sqrt(1 - arc));
+  }
+
+  function osmUnit(element) {
+    const tags = element.properties || {};
+    const [lon, lat] = element.geometry?.coordinates || [];
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+
+    const mappedType = String(tags.healthcare || (tags.osm_key === 'healthcare' ? tags.osm_value : '') || (tags.osm_key === 'amenity' ? tags.osm_value : '') || (tags.osm_key === 'office' ? tags.osm_value : '') || '').toLowerCase();
+    const validHealthcareTags = new Set(['hospital', 'hospital_department', 'clinic', 'health_centre', 'health_center', 'doctor', 'doctors', 'physician', 'health_post', 'dentist', 'pharmacy', 'laboratory', 'rehabilitation', 'diagnostics']);
+    if (!validHealthcareTags.has(mappedType) || !['amenity', 'healthcare', 'office'].includes(tags.osm_key)) return null;
+    let type = 'Unidade de saúde';
+    if (/upa|unidade de pronto atendimento/i.test(tags.name || '')) type = 'UPA';
+    else if ((mappedType === 'hospital' || mappedType === 'hospital_department') && /regional/i.test(tags.name || '')) type = 'Hospital Regional';
+    else if (mappedType === 'hospital' || mappedType === 'hospital_department') type = 'Hospital';
+    else if (mappedType === 'clinic' && /\bubs\b|\busf\b|unidade b[aá]sica|posto de sa[uú]de|centro de sa[uú]de/i.test(tags.name || '')) type = 'UBS';
+    else if (mappedType === 'clinic' || mappedType === 'health_centre' || mappedType === 'health_center') type = 'Clínica';
+    else if (mappedType === 'doctor' || mappedType === 'doctors' || mappedType === 'physician') type = 'Consultório';
+    else if (mappedType === 'health_post') type = 'UBS';
+    else if (mappedType === 'dentist') type = 'Dentista';
+    else if (mappedType === 'pharmacy') type = 'Farmácia';
+    else if (mappedType === 'laboratory' || /laborat[oó]rio/i.test(tags.name || '')) type = 'Laboratório';
+    else if (mappedType === 'rehabilitation') type = 'Reabilitação';
+    else if (mappedType === 'diagnostics') type = 'Diagnóstico';
+    else if (mappedType) type = `Saúde: ${mappedType.replaceAll('_', ' ')}`;
+
+    const name = tags.name || `${type} sem nome no mapa`;
+    const district = tags.district || tags.locality || '';
+    const address = [tags.street, tags.housenumber, district, tags.city, tags.postcode].filter(Boolean).join(', ');
+
+    return {
+      id: `osm-${tags.osm_type}-${tags.osm_id}`,
+      name,
+      type,
+      network: 'Rede não informada',
+      address: address || 'Endereço não cadastrado no mapa',
+      region: district || tags.city || '',
+      lat,
+      lon,
+      distance: distanceBetween(userPosition.latitude, userPosition.longitude, lat, lon),
+      mapsUrl: `https://www.openstreetmap.org/${String(tags.osm_type || 'node').toLowerCase()}/${tags.osm_id}`,
+      routeUrl: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lon}`)}`,
+      source: `OpenStreetMap · ${tags.osm_type} ${tags.osm_id}`
+    };
+  }
+
+  async function loadNearbyUnits() {
+    if (!userPosition || unitsLoading) return;
+    unitsLoading = true;
+    const status = $('#locationStatus');
+    status.textContent = 'Buscando unidades de saúde mapeadas em até 25 km…';
+    renderUnits();
+
+    const latDelta = 0.23;
+    const lonDelta = 0.23 / Math.max(Math.cos(userPosition.latitude * Math.PI / 180), 0.3);
+    const bbox = [userPosition.longitude - lonDelta, userPosition.latitude - latDelta, userPosition.longitude + lonDelta, userPosition.latitude + latDelta].join(',');
+    const searches = ['hospital', 'UPA', 'UBS', 'posto de saude', 'clinic', 'pharmacy', 'dentist', 'laboratory'];
+    const results = await Promise.allSettled(searches.map(async (term) => {
+      const url = new URL(PHOTON_ENDPOINT);
+      url.searchParams.set('q', term);
+      url.searchParams.set('bbox', bbox);
+      url.searchParams.set('limit', '100');
+      const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }));
+    unitsLoading = false;
+    const features = results.flatMap((result) => result.status === 'fulfilled' ? result.value.features || [] : []);
+    if (!features.length) {
+      console.warn('Via Saúde: a consulta cartográfica não respondeu.', results.filter((result) => result.status === 'rejected'));
+      status.textContent = 'Não foi possível carregar as unidades do mapa agora. Verifique a conexão e tente novamente.';
+      renderUnits('A fonte cartográfica está temporariamente indisponível.');
+      return;
+    }
+
+    const seen = new Set();
+    const mappedUnits = features
+      .map(osmUnit)
+      .filter((unit) => unit && unit.distance <= 25 && unit.id !== 'osm-undefined-undefined' && !seen.has(unit.id) && seen.add(unit.id))
+      .sort((a, b) => a.distance - b.distance);
+    HEALTH_UNITS = mappedUnits.filter((unit, index) => !mappedUnits.slice(0, index).some((other) =>
+      other.name.toLocaleLowerCase('pt-BR') === unit.name.toLocaleLowerCase('pt-BR') &&
+      distanceBetween(other.lat, other.lon, unit.lat, unit.lon) <= 0.15
+    ));
+    status.textContent = HEALTH_UNITS.length
+      ? `Mostrando unidades mapeadas em até 25 km da sua localização. A distância é em linha reta; o mapa calcula a rota.`
+      : 'Nenhuma unidade mapeada foi encontrada nesta área. Tente novamente em outra localização.';
+    renderUnits();
+  }
+
+  function requestUserLocation() {
+    const status = $('#locationStatus');
+    if (!navigator.geolocation) {
+      status.textContent = 'Este navegador não oferece localização. Abra o site em um navegador compatível e em uma conexão segura (HTTPS).';
+      return;
+    }
+    status.textContent = 'Aguardando autorização para acessar sua localização…';
+    navigator.geolocation.getCurrentPosition((position) => {
+      userPosition = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+      $('#distanceFilter').disabled = false;
+      $('#sortFilter').value = filters.sort = 'distancia';
+      loadNearbyUnits();
+    }, (error) => {
+      status.textContent = error.code === error.PERMISSION_DENIED
+        ? 'Localização não autorizada. Autorize no navegador para buscar unidades próximas e calcular distâncias.'
+        : 'Não foi possível obter sua localização. Confira as permissões e tente novamente.';
+      renderUnits();
+    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+  }
+
   function filteredUnits() {
-    let list = [...UNITS];
-    if (filters.region !== 'todas') list = list.filter((u) => u.region === filters.region);
-    if (filters.service !== 'todos') list = list.filter((u) => u.services.includes(filters.service));
-    if (filters.lotacao !== 'todos') list = list.filter((u) => u.status === filters.lotacao);
+    let list = [...HEALTH_UNITS];
+    if (filters.type !== 'todos') list = list.filter((u) => u.type === filters.type || (filters.type === 'Hospital Regional' && u.type === 'Hospital' && /regional/i.test(u.name)));
     if (filters.distance === 'ate-2km') list = list.filter((u) => u.distance <= 2);
     if (filters.distance === 'ate-5km') list = list.filter((u) => u.distance <= 5);
     if (filters.distance === 'mais-5km') list = list.filter((u) => u.distance > 5);
     const sorters = {
-      fila: (a, b) => a.queueMinutes - b.queueMinutes,
       distancia: (a, b) => a.distance - b.distance,
       nome: (a, b) => a.name.localeCompare(b.name, 'pt-BR')
     };
-    return list.sort(sorters[filters.sort] || sorters.fila);
+    return list.sort(sorters[filters.sort] || sorters.distancia);
   }
 
-  function renderUnits() {
+  function renderUnits(errorMessage = '') {
     const box = $('#unitResults');
     const summary = $('#unitSummary');
     const list = filteredUnits();
@@ -197,38 +295,27 @@
       summary.textContent = 'Nenhuma unidade encontrada.';
       box.innerHTML = `
         <div class="empty">
-          <h3>Nenhuma unidade com esses filtros</h3>
-          <p>Tente outra região, serviço ou distância.</p>
-          <button type="button" class="btn btn-secondary" data-action="clear-filters">Limpar filtros</button>
+          <h3>${unitsLoading ? 'Carregando unidades próximas' : errorMessage ? 'Mapa indisponível' : userPosition ? 'Nenhuma unidade com esses filtros' : 'Ative sua localização'}</h3>
+          <p>${esc(errorMessage || (userPosition ? 'Tente outros filtros ou amplie a busca no mapa.' : 'Precisamos da sua autorização para localizar unidades perto de você.'))}</p>
+          ${!userPosition || errorMessage ? '<button type="button" class="btn btn-secondary" data-action="get-location">Tentar novamente</button>' : '<button type="button" class="btn btn-secondary" data-action="clear-filters">Limpar filtros</button>'}
         </div>`;
       return;
     }
 
-    const low = list.filter((u) => u.status === 'verde').length;
-    const best = [...list].sort((a, b) => a.queueMinutes - b.queueMinutes)[0];
-    summary.textContent = `${list.length} ${list.length === 1 ? 'unidade' : 'unidades'} · ${low} com lotação baixa · menor fila: ${best.queueMinutes} min (${best.name})`;
+    summary.textContent = `${list.length} ${list.length === 1 ? 'unidade mapeada' : 'unidades mapeadas'} · ${userPosition ? 'mais próximas primeiro' : 'distância indisponível'}`;
 
     box.innerHTML = list.map((u) => `
-      <article class="unit ${esc(u.status)}">
+      <article class="unit">
         <div class="unit-top">
-          <span class="unit-type">${esc(u.type)} · ${esc(u.region)}</span>
-          <span class="badge">${esc(LOTACAO[u.status] || u.status)}</span>
+          <span class="unit-type">${esc(u.type)} · ${esc(u.network)} · ${esc(u.region)}</span>
         </div>
         <div>
           <h3>${esc(u.name)}</h3>
           <p class="unit-address">${esc(u.address)}</p>
         </div>
-        <div class="unit-meta">
-          <div><span>Fila estimada</span><strong>${esc(u.queueMinutes)} min</strong></div>
-          <div><span>Distância</span><strong>${u.distance.toFixed(1)} km</strong></div>
-        </div>
-        <ul class="services" aria-label="Serviços oferecidos">
-          ${u.services.map((s) => `<li>${esc(serviceName(s))}</li>`).join('')}
-        </ul>
+        <div class="unit-meta"><div><span>Distância em linha reta</span><strong>${u.distance.toFixed(1)} km</strong></div></div>
         <div class="unit-actions">
-          <a class="btn btn-secondary btn-small" target="_blank" rel="noopener noreferrer"
-             href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${u.name} ${u.address}`)}">Como chegar</a>
-          <button type="button" class="btn btn-primary btn-small" data-action="prefill-booking" data-unit-id="${esc(u.id)}">Agendar</button>
+          <a class="btn btn-secondary btn-small" target="_blank" rel="noopener noreferrer" href="${esc(u.routeUrl)}">Como chegar</a>
         </div>
       </article>`).join('');
   }
@@ -630,6 +717,8 @@
         startEditing(trigger.dataset.id);
       } else if (action === 'clear-filters') {
         clearFilters();
+      } else if (action === 'get-location') {
+        requestUserLocation();
       }
     });
   }

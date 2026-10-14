@@ -14,18 +14,14 @@ window.viaSaudeServices = {
   vacina: 'Vacinação'
 };
 
+// Agendamento de demonstração; este array não é o catálogo cartográfico.
 window.viaSaudeUnits = [
   {
     id: 'upa-centro-norte',
-    name: 'UPA Centro Norte',
-    region: 'Plano Piloto',
-    district: 'Centro Norte',
+    name: 'UPA Sobradinho',
+    region: 'Sobradinho',
+    district: 'Sobradinho II',
     type: 'UPA',
-    distance: 1.2,
-    queueMinutes: 18,
-    status: 'verde',
-    address: 'Av. Central, 224, Centro Norte, Brasília',
-    phone: '(61) 3234-1200',
     services: ['consulta-geral', 'vacina'],
     doctorsByService: {
       'consulta-geral': ['Dra. Ana Souza', 'Dr. Ricardo Costa', 'Enf. Camila Nunes'],
@@ -38,15 +34,10 @@ window.viaSaudeUnits = [
   },
   {
     id: 'hospital-regional',
-    name: 'Hospital Regional de Saúde',
+    name: 'Hospital Regional da Asa Norte (HRAN)',
     region: 'Plano Piloto',
-    district: 'Setor Comercial',
+    district: 'Asa Norte',
     type: 'Hospital',
-    distance: 2.4,
-    queueMinutes: 31,
-    status: 'amarelo',
-    address: 'Quadra 7, Setor Comercial, Brasília',
-    phone: '(61) 3354-2200',
     services: ['cardiologia', 'ginecologia'],
     doctorsByService: {
       cardiologia: ['Dr. César Nogueira', 'Dra. Mila Faria'],
@@ -63,11 +54,6 @@ window.viaSaudeUnits = [
     region: 'Plano Piloto',
     district: 'Sul',
     type: 'UBS',
-    distance: 3.1,
-    queueMinutes: 12,
-    status: 'verde',
-    address: 'Rua das Águas, 40, Sul, Brasília',
-    phone: '(61) 3440-9000',
     services: ['pediatria', 'consulta-geral'],
     doctorsByService: {
       pediatria: ['Dra. Gabriela Costa', 'Dr. Vinicius Lemos'],
@@ -84,11 +70,6 @@ window.viaSaudeUnits = [
     region: 'Taguatinga',
     district: 'QD 12',
     type: 'UPA',
-    distance: 2.8,
-    queueMinutes: 26,
-    status: 'amarelo',
-    address: 'QD 12, lotes 5-8, Taguatinga',
-    phone: '(61) 3117-5600',
     services: ['consulta-geral', 'ultrassom'],
     doctorsByService: {
       'consulta-geral': ['Dra. Sofia Andrade', 'Dr. Tadeu Ramos'],
@@ -101,15 +82,10 @@ window.viaSaudeUnits = [
   },
   {
     id: 'hospital-taguatinga',
-    name: 'Hospital Taguatinga',
+    name: 'Hospital Regional de Taguatinga (HRT)',
     region: 'Taguatinga',
     district: 'Praça do Relógio',
     type: 'Hospital',
-    distance: 4.1,
-    queueMinutes: 42,
-    status: 'vermelho',
-    address: 'Praça do Relógio, Taguatinga, Brasília',
-    phone: '(61) 3301-4545',
     services: ['cardiologia', 'ginecologia'],
     doctorsByService: {
       cardiologia: ['Dr. Joaquim Vale', 'Dra. Renata Figueiredo'],
@@ -126,11 +102,6 @@ window.viaSaudeUnits = [
     region: 'Taguatinga',
     district: 'SHIS QI 30',
     type: 'UBS',
-    distance: 2.1,
-    queueMinutes: 15,
-    status: 'verde',
-    address: 'SHIS QI 30, Taguatinga',
-    phone: '(61) 3102-8800',
     services: ['pediatria', 'vacina'],
     doctorsByService: {
       pediatria: ['Dra. Elisa Bittencourt', 'Dr. Alexandre Costa'],
@@ -147,11 +118,6 @@ window.viaSaudeUnits = [
     region: 'Ceilândia',
     district: 'Centro',
     type: 'UPA',
-    distance: 3.4,
-    queueMinutes: 21,
-    status: 'verde',
-    address: 'Centro de Ceilândia, Brasília',
-    phone: '(61) 3196-7800',
     services: ['consulta-geral', 'vacina'],
     doctorsByService: {
       'consulta-geral': ['Dr. Paulo Viegas', 'Dra. Aline Duarte'],
@@ -164,15 +130,10 @@ window.viaSaudeUnits = [
   },
   {
     id: 'hospital-sao-jose',
-    name: 'Hospital São José',
+    name: 'Hospital Regional de Ceilândia (HRC)',
     region: 'Ceilândia',
     district: 'QNM 20',
     type: 'Hospital',
-    distance: 5.6,
-    queueMinutes: 35,
-    status: 'amarelo',
-    address: 'QNM 20, bloco B, Ceilândia',
-    phone: '(61) 3340-1000',
     services: ['cardiologia', 'pediatria'],
     doctorsByService: {
       cardiologia: ['Dr. Renan Dourado', 'Dra. Joana Bragança'],
@@ -189,11 +150,6 @@ window.viaSaudeUnits = [
     region: 'Gama',
     district: 'Setor Central',
     type: 'UBS',
-    distance: 1.7,
-    queueMinutes: 10,
-    status: 'verde',
-    address: 'Setor Central, Gama, Brasília',
-    phone: '(61) 3185-4411',
     services: ['consulta-geral', 'vacina'],
     doctorsByService: {
       'consulta-geral': ['Dra. Nádia Brito', 'Dr. Otto Lins'],
@@ -210,11 +166,6 @@ window.viaSaudeUnits = [
     region: 'Gama',
     district: 'Setor Sul',
     type: 'UPA',
-    distance: 3.2,
-    queueMinutes: 29,
-    status: 'amarelo',
-    address: 'Setor Sul, Gama, Brasília',
-    phone: '(61) 3366-7070',
     services: ['ultrassom', 'ginecologia'],
     doctorsByService: {
       ultrassom: ['Dra. Cíntia Marchi', 'Dr. Iago Pires'],
